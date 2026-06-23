@@ -1,56 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Senhas</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecurePass - Gerador de Senhas</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Gerador de Senhas</h1>
+<div class="container">
+  <div class="card">
+    <h1>🔐 SecurePass</h1>
+    <p class="subtitle">
+      Gere senhas seguras com 6 caracteres, contendo no mínimo
+      3 números e 2 letras maiúsculas.
+    </p>
 
-        <div class="senha">
-            <div class="box" id="c1">-</div>
-            <div class="box" id="c2">-</div>
-            <div class="box" id="c3">-</div>
-            <div class="box" id="c4">-</div>
-            <div class="box" id="c5">-</div>
-            <div class="box" id="c6">-</div>
-        </div>
-
-        <button onclick="gerarSenha()">Gerar Senha</button>
+    <div class="password-box">
+      <div class="char-box" id="c1">-</div>
+      <div class="char-box" id="c2">-</div>
+      <div class="char-box" id="c3">-</div>
+      <div class="char-box" id="c4">-</div>
+      <div class="char-box" id="c5">-</div>
+      <div class="char-box" id="c6">-</div>
     </div>
 
-    <script>
-        function gerarSenha() {
-            const numeros = "0123456789";
-            const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    <div class="buttons">
+      <button class="generate" onclick="gerarSenha()">
+        Gerar Senha
+      </button>
 
-            let senha = [];
+      <button class="copy" onclick="copiarSenha()">
+        Copiar
+      </button>
+    </div>
 
-            for (let i = 0; i < 3; i++) {
-                senha.push(numeros[Math.floor(Math.random() * numeros.length)]);
-            }
+    <p id="status"></p>
+  </div>
+</div>
 
-            for (let i = 0; i < 2; i++) {
-                senha.push(letras[Math.floor(Math.random() * letras.length)]);
-            }
+<script>
+let senhaAtual = "";
 
-            const todos = numeros + letras;
-            senha.push(todos[Math.floor(Math.random() * todos.length)]);
+function gerarSenha() {
+  const numeros = "0123456789";
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            for (let i = senha.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [senha[i], senha[j]] = [senha[j], senha[i]];
-            }
+  let senha = [];
 
-            for (let i = 0; i < 6; i++) {
-                document.getElementById("c" + (i + 1)).textContent = senha[i];
-            }
-        }
-    </script>
+  for (let i = 0; i < 3; i++) {
+    senha.push(numeros[Math.floor(Math.random() * numeros.length)]);
+  }
+
+  for (let i = 0; i < 2; i++) {
+    senha.push(letras[Math.floor(Math.random() * letras.length)]);
+  }
+
+  const todos = numeros + letras;
+  senha.push(todos[Math.floor(Math.random() * todos.length)]);
+
+  for (let i = senha.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [senha[i], senha[j]] = [senha[j], senha[i]];
+  }
+
+  senhaAtual = senha.join("");
+
+  senha.forEach((caractere, index) => {
+    document.getElementById(`c${index + 1}`).textContent = caractere;
+  });
+
+  document.getElementById("status").textContent = "";
+}
+
+function copiarSenha() {
+  if (!senhaAtual) return;
+
+  navigator.clipboard.writeText(senhaAtual);
+
+  document.getElementById("status").textContent =
+    "✅ Senha copiada com sucesso!";
+}
+</script>
 
 </body>
 </html>
